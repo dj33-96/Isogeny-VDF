@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 """
-Created on Mon Jul  1 22:28:50 2024
+Created on Mon Jul  1 14:28:50 2024
 
 @author: David1
 """
 from ecc_functions import *
 from random import *
 
-def print_dbl_tb(W,p,Num,correction,k,dir_name=""):
+def print_dbl_tb(W,p,Num,correction,random,inputs,dir_name=""):
     M = 2*W
     C = 3 + 3* Num
     INS_1 = 2**Num
@@ -15,15 +15,14 @@ def print_dbl_tb(W,p,Num,correction,k,dir_name=""):
     INS_3 = 2**(Num*3)
     N = 2**(W+3)
     correction = pow(N,-1,p)
-    #Generate Point
-    x,z = randint(0,p),randint(0,p)
-    #To select a random cuve, set curve to false
-    curve = True
-    if curve:
-        #Standard E(A): y**2 = x**3 + 6*x + x curve
-        a,c = 8,4
+    #Inputs
+    if random == False:
+        x,z = inputs[0],inputs[1]
+        a,c = inputs[2],inputs[3]
     else:
+        x,z = randint(0,p),randint(0,p)
         a,c = randint(0,p),randint(0,p)
+        
     x_dbl,z_dbl = dbl(x, z, a, c, p, correction)
     x_dbl,z_dbl = (x_dbl)%p,(z_dbl)%p
     module_name = "dbl_{}_tb".format(W)
@@ -185,7 +184,7 @@ endmodule
     f.write(S)
     f.close()
 
-def print_iso_4_c_tb(W,p,Num,correction,dir_name=""):
+def print_iso_4_c_tb(W,p,Num,correction,random,inputs,dir_name=""):
     M = 2*W
     C = 3 + 3* Num
     INS_1 = 2**Num
@@ -193,8 +192,11 @@ def print_iso_4_c_tb(W,p,Num,correction,dir_name=""):
     INS_3 = 2**(Num*3)
     N = 2**(W+3)
     correction = pow(N,-1,p)
-    #Generate Point
-    x,z = randint(0,p),randint(0,p)
+    #Inputs
+    if random == False:
+        x,z = inputs[0],inputs[1]
+    else:
+        x,z = randint(0,p),randint(0,p)
     
     a,c,k1,k2,k3 = iso_4_c(x, z, p, correction)
     module_name = "4_iso_c_{}_tb".format(W)
@@ -371,7 +373,7 @@ endmodule
     f.write(S)
     f.close()
 
-def print_iso_4_e_tb(W,p,Num,correction,dir_name=""):
+def print_iso_4_e_tb(W,p,Num,correction,random,inputs,dir_name=""):
     M = 2*W
     C = 3 + 3* Num
     INS_1 = 2**Num
@@ -379,10 +381,13 @@ def print_iso_4_e_tb(W,p,Num,correction,dir_name=""):
     INS_3 = 2**(Num*3)
     N = 2**(W+3)
     correction = pow(N,-1,p)
-    #Generate Point
-    x,z = randint(0,p),randint(0,p)
-    #Generate last inputs
-    k1,k2,k3 = randint(0,p),randint(0,p),randint(0,p)
+    #Inputs
+    if random == False:
+        x,z = inputs[0],inputs[1]
+        k1,k2,k3 = inputs[2],inputs[3],inputs[4]
+    else:
+        x,z = randint(0,p),randint(0,p)
+        k1,k2,k3 = randint(0,p),randint(0,p),randint(0,p)
     x0,z0 = iso_4_e(x, z, k1, k2, k3, p, correction)
     module_name = "4_iso_e_{}_tb".format(W)
     S = """
